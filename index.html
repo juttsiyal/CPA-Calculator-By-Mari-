@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University GPA Calculator</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+        }
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 24px;
+        }
+        p.subtitle {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .subject-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: var(--primary);
+        }
+        .remove-btn {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .remove-btn:hover {
+            background-color: #dc2626;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .add-btn {
+            background-color: #10b981;
+            color: white;
+        }
+        .add-btn:hover {
+            background-color: #059669;
+        }
+        .calc-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+        .calc-btn:hover {
+            background-color: var(--primary-hover);
+        }
+        #result {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #e0e7ff;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--primary);
+            display: none;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 400px) {
+            .subject-row {
+                flex-direction: column;
+                background: #f9fafb;
+                padding: 15px;
+                border-radius: 8px;
+            }
+            .remove-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>GPA Calculator</h2>
+    <p class="subtitle">Enter your subject marks and credit hours</p>
+    
+    <div id="subjects-container">
+        <div class="subject-row">
+            <input type="number" class="marks" placeholder="Marks (e.g. 85)" min="0" max="100" required>
+            <input type="number" class="credits" placeholder="Credit Hrs (e.g. 3)" min="1" max="6" required>
+            <button class="remove-btn" onclick="removeRow(this)">X</button>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button class="add-btn" onclick="addSubject()">+ Add Subject</button>
+        <button class="calc-btn" onclick="calculateGPA()">Calculate GPA</button>
+    </div>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    // यह फंक्शन आपके टेबल के हिसाब से मार्क्स को ग्रेड पॉइंट में बदलता है
+    function getGradePoint(marks) {
+        if (marks >= 85) return 4.00;
+        if (marks === 84) return 3.94;
+        if (marks === 83) return 3.88;
+        if (marks === 82) return 3.82;
+        if (marks === 81) return 3.77;
+        if (marks === 80) return 3.71;
+        if (marks === 79) return 3.65;
+        if (marks === 78) return 3.60;
+        if (marks === 77) return 3.54;
+        if (marks === 76) return 3.48;
+        if (marks === 75) return 3.43;
+        if (marks === 74) return 3.37;
+        if (marks === 73) return 3.31;
+        if (marks === 72) return 3.25;
+        if (marks === 71) return 3.20;
+        if (marks === 70) return 3.14;
+        if (marks === 69) return 3.08;
+        if (marks === 68) return 3.03;
+        if (marks === 67) return 2.97;
+        if (marks === 66) return 2.91;
+        if (marks === 65) return 2.86;
+        if (marks === 64) return 2.80;
+        if (marks === 63) return 2.74;
+        if (marks === 62) return 2.68;
+        if (marks === 61) return 2.63;
+        if (marks === 60) return 2.57;
+        if (marks === 59) return 2.51;
+        if (marks === 58) return 2.46;
+        if (marks === 57) return 2.40;
+        if (marks === 56) return 2.34;
+        if (marks === 55) return 2.29;
+        if (marks === 54) return 2.23;
+        if (marks === 53) return 2.17;
+        if (marks === 52) return 2.11;
+        if (marks === 51) return 2.06;
+        if (marks === 50) return 2.00;
+        return 0.00; // 50 से कम फेल (0.00)
+    }
+
+    // नया सब्जेक्ट जोड़ने का फंक्शन
+    function addSubject() {
+        const container = document.getElementById('subjects-container');
+        const row = document.createElement('div');
+        row.className = 'subject-row';
+        row.innerHTML = `
+            <input type="number" class="marks" placeholder="Marks (e.g. 85)" min="0" max="100" required>
+            <input type="number" class="credits" placeholder="Credit Hrs (e.g. 3)" min="1" max="6" required>
+            <button class="remove-btn" onclick="removeRow(this)">X</button>
+        `;
+        container.appendChild(row);
+    }
+
+    // सब्जेक्ट हटाने का फंक्शन
+    function removeRow(btn) {
+        const row = btn.parentElement;
+        if(document.querySelectorAll('.subject-row').length > 1) {
+            row.remove();
+        } else {
+            alert("At least one subject is required!");
+        }
+    }
+
+    // GPA कैलकुलेट करने का फंक्शन
+    function calculateGPA() {
+        const markInputs = document.querySelectorAll('.marks');
+        const creditInputs = document.querySelectorAll('.credits');
+        
+        let totalQualityPoints = 0;
+        let totalCredits = 0;
+        let isValid = true;
+
+        for (let i = 0; i < markInputs.length; i++) {
+            let marks = parseInt(markInputs[i].value);
+            let credits = parseFloat(creditInputs[i].value);
+
+            if (isNaN(marks) || isNaN(credits)) {
+                isValid = false;
+                break;
+            }
+
+            let gradePoint = getGradePoint(marks);
+            totalQualityPoints += (gradePoint * credits);
+            totalCredits += credits;
+        }
+
+        const resultDiv = document.getElementById('result');
+        if (!isValid || totalCredits === 0) {
+            resultDiv.style.display = 'block';
+            resultDiv.style.color = '#dc2626';
+            resultDiv.style.backgroundColor = '#fee2e2';
+            resultDiv.innerHTML = "Please enter valid Marks and Credit Hours!";
+            return;
+        }
+
+        let gpa = totalQualityPoints / totalCredits;
+        
+        resultDiv.style.display = 'block';
+        resultDiv.style.color = 'var(--primary)';
+        resultDiv.style.backgroundColor = '#e0e7ff';
+        resultDiv.innerHTML = `Your GPA is: ${gpa.toFixed(2)}`;
+    }
+</script>
+
+</body>
+</html>
+
