@@ -3,21 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>University GPA Calculator</title>
+    <title>GPA Calculator By Mari.</title>
     <style>
         :root {
             --primary: #4f46e5;
             --primary-hover: #4338ca;
-            --bg: #f3f4f6;
-            --card-bg: #ffffff;
+            --bg-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
             --text: #1f2937;
         }
         * {
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        
+        /* --- INTRO ANIMATION --- */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: #1f2937;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+        }
+
+        .intro-title {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeIn 1s forwards 0.3s;
+        }
+
+        .intro-mari {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            transform: scale(0.5);
+            animation: popIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.8s;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes popIn {
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* --- MAIN WEBSITE --- */
         body {
-            background-color: var(--bg);
+            background: var(--bg-gradient);
             color: var(--text);
             margin: 0;
             padding: 20px;
@@ -25,72 +71,108 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow: hidden; /* Hide scrollbar during intro */
         }
+        
         .container {
             background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
             width: 100%;
             max-width: 500px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
         }
+
+        .container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         h2 {
             text-align: center;
             color: var(--primary);
             margin-top: 0;
-            font-size: 24px;
+            margin-bottom: 5px;
+            font-size: 28px;
+            font-weight: 800;
         }
-        p.subtitle {
+
+        /* --- ATTRACTIVE NAME TAG --- */
+        .name-tag {
             text-align: center;
-            color: #6b7280;
-            font-size: 14px;
-            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 900;
+            margin-bottom: 25px;
+            background: linear-gradient(90deg, #ec4899, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite ease-in-out;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
         }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 10px rgba(236, 72, 153, 0.3); }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+
         .subject-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 15px;
             align-items: center;
         }
         input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
+            padding: 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
             font-size: 16px;
             outline: none;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            background: #f9fafb;
         }
         input:focus {
             border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
         }
         .remove-btn {
-            background-color: #ef4444;
-            color: white;
+            background-color: #fee2e2;
+            color: #ef4444;
             border: none;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
             font-size: 16px;
+            transition: 0.3s;
         }
         .remove-btn:hover {
-            background-color: #dc2626;
+            background-color: #ef4444;
+            color: white;
         }
         .btn-group {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 25px;
         }
         button {
             flex: 1;
-            padding: 14px;
+            padding: 15px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: transform 0.1s, background-color 0.3s;
+        }
+        button:active {
+            transform: scale(0.98);
         }
         .add-btn {
             background-color: #10b981;
@@ -110,33 +192,45 @@
             margin-top: 25px;
             padding: 20px;
             background-color: #e0e7ff;
-            border-radius: 8px;
+            border-radius: 10px;
             text-align: center;
-            font-size: 22px;
-            font-weight: bold;
+            font-size: 24px;
+            font-weight: 900;
             color: var(--primary);
             display: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
         
         /* Mobile responsiveness */
-        @media (max-width: 400px) {
+        @media (max-width: 450px) {
             .subject-row {
                 flex-direction: column;
-                background: #f9fafb;
+                background: #f3f4f6;
                 padding: 15px;
-                border-radius: 8px;
+                border-radius: 10px;
             }
             .remove-btn {
                 width: 100%;
+            }
+            .btn-group {
+                flex-direction: column;
+            }
+            .intro-mari {
+                font-size: 2.5rem;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div id="intro-screen">
+    <div class="intro-title">Welcome to GPA Calculator</div>
+    <div class="intro-mari">Calculate By Mari.</div>
+</div>
+
+<div class="container" id="main-container">
     <h2>GPA Calculator</h2>
-    <p class="subtitle">Enter your subject marks and credit hours</p>
+    <div class="name-tag">Calculate By Mari.</div>
     
     <div id="subjects-container">
         <div class="subject-row">
@@ -155,6 +249,22 @@
 </div>
 
 <script>
+    // --- INTRO SCREEN LOGIC ---
+    window.addEventListener('load', () => {
+        const intro = document.getElementById('intro-screen');
+        const mainContainer = document.getElementById('main-container');
+        
+        // 3 seconds ke baad intro hide ho jayega aur main screen show hogi
+        setTimeout(() => {
+            intro.style.opacity = '0';
+            intro.style.visibility = 'hidden';
+            
+            mainContainer.classList.add('show');
+            document.body.style.overflow = 'auto'; // allow scrolling again
+        }, 3000);
+    });
+
+    // --- AAPKI ORIGINAL JAVASCRIPT LOGIC (BILKUL SAME) ---
     // यह फंक्शन आपके टेबल के हिसाब से मार्क्स को ग्रेड पॉइंट में बदलता है
     function getGradePoint(marks) {
         if (marks >= 85) return 4.00;
@@ -262,4 +372,3 @@
 
 </body>
 </html>
-
